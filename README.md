@@ -1,6 +1,6 @@
 # AspNetCoreCacheKit
 
-[![NuGet](https://img.shields.io/nuget/v/AspNetCoreCacheKit.svg)](https://www.nuget.org/packages/AspNetCoreCacheKit) [![.NET](https://github.com/yourusername/AspNetCoreCacheKit/actions/workflows/dotnet.yml/badge.svg)](https://github.com/yourusername/AspNetCoreCacheKit/actions)
+[![NuGet](https://img.shields.io/nuget/v/AspNetCoreCacheKit.svg)](https://www.nuget.org/packages/AspNetCoreCacheKit) [![.NET](https://github.com/simoneM93/AspNetCoreCacheKit/actions/workflows/dotnet.yml/badge.svg)](https://github.com/simoneM93/AspNetCoreCacheKit/actions)
 
 A modern caching library for ASP.NET Core featuring **group-based keys**, configuration validation, and simplified overloads.
 
@@ -26,6 +26,7 @@ A modern caching library for ASP.NET Core featuring **group-based keys**, config
 dotnet add package AspNetCoreCacheKit
 dotnet add package Microsoft.Extensions.Options.ConfigurationExtensions
 dotnet add package Microsoft.Extensions.Options.DataAnnotations
+```
 
 ## 🎯 Quick Start
 
@@ -37,6 +38,7 @@ dotnet add package Microsoft.Extensions.Options.DataAnnotations
     "Duration": "01:00:00"
   }
 }
+```
 
 ### 2. Register Services
 ```csharp
@@ -66,3 +68,4 @@ public class UsersController : ControllerBase
         return Ok(users);
     }
 }
+```
