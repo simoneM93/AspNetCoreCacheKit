@@ -43,6 +43,7 @@ dotnet add package Microsoft.Extensions.Options.DataAnnotations
 ### 2. Register Services
 ```csharp
 builder.Services.AddAspNetCoreCacheKit(builder.Configuration);
+```
 
 ### 3. Use in Controller/Service
 ```csharp
