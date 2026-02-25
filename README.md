@@ -35,7 +35,7 @@ dotnet add package Microsoft.Extensions.Options.DataAnnotations
 {
   "CacheOptions": {
     "IsEnabled": true,
-    "Duration": "01:00:00"
+    "Duration": 60 //Expressed in minutes
   }
 }
 ```
