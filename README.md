@@ -1,6 +1,6 @@
 # AspNetCoreCacheKit
 
-[![NuGet](https://img.shields.io/nuget/v/AspNetCoreCacheKit.svg)](https://www.nuget.org/packages/AspNetCoreCacheKit) [![.NET](https://github.com/simoneM93/AspNetCoreCacheKit/actions/workflows/dotnet.yml/badge.svg)](https://github.com/simoneM93/AspNetCoreCacheKit/actions)
+[![NuGet](https://img.shields.io/nuget/v/AspNetCoreCacheKit.svg)](https://www.nuget.org/packages/AspNetCoreCacheKit)
 
 A modern caching library for ASP.NET Core featuring **group-based keys**, configuration validation, and simplified overloads.
 
@@ -17,8 +17,8 @@ A modern caching library for ASP.NET Core featuring **group-based keys**, config
 
 | Requirement | Minimum Version |
 |-------------|-----------------|
-| .NET | 8.0 or 9.0 |
-| ASP.NET Core | 8.0+ |
+| .NET | 9.0 |
+| ASP.NET Core | 9.0+ |
 
 ## 🚀 Installation
 
@@ -42,7 +42,11 @@ dotnet add package Microsoft.Extensions.Options.DataAnnotations
 
 ### 2. Register Services
 ```csharp
+// With config
 builder.Services.AddAspNetCoreCacheKit(builder.Configuration);
+
+// Only defaults (Without appsettings)
+builder.Services.AddAspNetCoreCacheKit();
 ```
 
 ### 3. Use in Controller/Service

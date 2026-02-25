@@ -2,6 +2,9 @@
 using AspNetCoreCacheKit.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace AspNetCoreCacheKit.Extensions
 {
