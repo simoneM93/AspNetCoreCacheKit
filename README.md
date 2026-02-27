@@ -17,15 +17,13 @@ A modern caching library for ASP.NET Core featuring **group-based keys**, config
 
 | Requirement | Minimum Version |
 |-------------|-----------------|
-| .NET | 9.0 |
-| ASP.NET Core | 9.0+ |
+| .NET        | 9.0+             |
+| ASP.NET Core| 9.0+            |
 
 ## 🚀 Installation
 
 ```bash
 dotnet add package AspNetCoreCacheKit
-dotnet add package Microsoft.Extensions.Options.ConfigurationExtensions
-dotnet add package Microsoft.Extensions.Options.DataAnnotations
 ```
 
 ## 🎯 Quick Start
