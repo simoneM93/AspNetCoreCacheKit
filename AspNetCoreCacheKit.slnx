@@ -1,3 +1,4 @@
 <Solution>
-  <Project Path="AspNetCoreCacheKit.csproj" />
+  <Project Path="AspNetCoreCacheKit.Tests/AspNetCoreCacheKit.Tests.csproj" Id="8e894f6d-8e06-4c75-9447-8db193425e5d" />
+  <Project Path="AspNetCoreCacheKit/AspNetCoreCacheKit.csproj" />
 </Solution>

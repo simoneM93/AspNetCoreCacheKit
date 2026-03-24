@@ -2,7 +2,6 @@
 using AspNetCoreCacheKit.Models;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using Microsoft.Extensions.Primitives;
 
 namespace AspNetCoreCacheKit
 {
@@ -20,11 +19,11 @@ namespace AspNetCoreCacheKit
             _cacheOptions = cacheOptions.Value;
         }
 
-        public void Set(string groupKey, string key, object value, TimeSpan? duration = null)
+        public void Set<T>(string groupKey, string key, T value, TimeSpan? duration = null)
         {
             if (_cacheOptions.IsEnabled)
             {
-                var fullKey = GetFullKey(key, groupKey);
+                var fullKey = GetFullKey(groupKey, key);
                 _memoryCache.Set(fullKey, value, new MemoryCacheEntryOptions
                 {
                     AbsoluteExpirationRelativeToNow = ResolveExpiration(groupKey, duration)
@@ -81,7 +80,7 @@ namespace AspNetCoreCacheKit
                 _memoryCache.Remove(GetFullKey(groupKey, key));
         }
 
-        public void Set(string key, object value, TimeSpan? duration = null)
+        public void Set<T>(string key, T value, TimeSpan? duration = null)
             => Set(string.Empty, key, value, duration);
 
         public async Task<T?> GetOrCreateAsync<T>(
@@ -103,18 +102,5 @@ namespace AspNetCoreCacheKit
         private TimeSpan ResolveExpiration(string groupKey, TimeSpan? duration)
             => duration ?? _cacheOptions.GetGroupDuration(groupKey) ?? _cacheOptions.Duration;
 
-        private sealed class NullCacheEntry : ICacheEntry
-        {
-            public object Key => string.Empty;
-            public object? Value { get; set; }
-            public DateTimeOffset? AbsoluteExpiration { get; set; }
-            public TimeSpan? AbsoluteExpirationRelativeToNow { get; set; }
-            public TimeSpan? SlidingExpiration { get; set; }
-            public IList<IChangeToken> ExpirationTokens { get; } = [];
-            public IList<PostEvictionCallbackRegistration> PostEvictionCallbacks { get; } = [];
-            public CacheItemPriority Priority { get; set; }
-            public long? Size { get; set; }
-            public void Dispose() { }
-        }
     }
 }

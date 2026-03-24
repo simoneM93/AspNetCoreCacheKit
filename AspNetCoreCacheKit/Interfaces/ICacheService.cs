@@ -4,9 +4,9 @@ namespace AspNetCoreCacheKit.Interfaces
 {
     public interface ICacheService
     {
-        void Set(string groupKey, string key, object value, TimeSpan? duration = null);
+        void Set<T>(string groupKey, string key, T value, TimeSpan? duration = null);
 
-        void Set(string key, object value, TimeSpan? duration = null);
+        void Set<T>(string key, T value, TimeSpan? duration = null);
 
         Task<T?> GetOrCreateAsync<T>(
             string groupKey,
