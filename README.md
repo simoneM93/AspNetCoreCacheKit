@@ -22,7 +22,6 @@ A lightweight caching library for ASP.NET Core featuring **group-based keys**, c
 - ✅ **Configuration validation** with DataAnnotations
 - 📐 **Nullable reference types** support
 - 🎛️ **`appsettings.json`** configuration with sensible defaults
-- 🧪 **DI-ready** — register with one line, mock `ICacheService` in tests
 
 ---
 
