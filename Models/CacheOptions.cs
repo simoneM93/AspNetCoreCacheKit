@@ -6,7 +6,21 @@ namespace AspNetCoreCacheKit.Models
     {
         public bool IsEnabled { get; set; } = true;
 
-        [Range(typeof(TimeSpan), "00:00:01", "24:00:00", ErrorMessage = "Duration must be between 1 second and 24 hours")]
-        public TimeSpan Duration { get; set; } = TimeSpan.FromMinutes(60);
+        [Range(1, int.MaxValue, ErrorMessage = "Duration must be greater than 0.")]
+        public int DurationMinutes { get; set; } = 60;
+
+        internal TimeSpan Duration => TimeSpan.FromMinutes(DurationMinutes);
+
+        public Dictionary<string, int> GroupDurations { get; set; } = [];
+
+        internal TimeSpan? GetGroupDuration(string groupKey)
+        {
+            if (string.IsNullOrEmpty(groupKey))
+                return null;
+
+            return GroupDurations.TryGetValue(groupKey, out var minutes)
+                ? TimeSpan.FromMinutes(minutes)
+                : null;
+        }
     }
 }
