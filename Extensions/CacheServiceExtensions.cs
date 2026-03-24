@@ -10,7 +10,9 @@ namespace AspNetCoreCacheKit.Extensions
 {
     public static class CacheServiceExtensions
     {
-        public static IServiceCollection AddAspNetCoreCacheKit(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection AddAspNetCoreCacheKit(
+           this IServiceCollection services,
+           IConfiguration configuration)
         {
             ArgumentNullException.ThrowIfNull(services);
             ArgumentNullException.ThrowIfNull(configuration);
@@ -18,20 +20,19 @@ namespace AspNetCoreCacheKit.Extensions
             services.AddMemoryCache();
 
             var cacheSection = configuration.GetSection("CacheOptions");
-            services.Configure<CacheOptions>(cacheSection);
 
             services.AddOptions<CacheOptions>()
                 .Bind(cacheSection)
                 .ValidateDataAnnotations()
-                .Validate(options => options.Duration > TimeSpan.Zero, "Duration must be greater than zero")
-                .PostConfigure(options =>
-                {
-                    options.Duration = options.Duration == TimeSpan.Zero ? TimeSpan.FromMinutes(60) : options.Duration;
-                })
+                .Validate(
+                    options => options.DurationMinutes > 0,
+                    "DurationMinutes must be greater than zero.")
+                .Validate(
+                    options => options.GroupDurations.Values.All(v => v > 0),
+                    "All GroupDurations values must be greater than zero.")
                 .ValidateOnStart();
 
-
-            services.AddScoped<ICacheService, CacheService>();
+            services.AddSingleton<ICacheService, CacheService>();
 
             return services;
         }
