@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [2.1.0] - 2026-03-24
+
+---
+
 ## [2.0.0] - 2026-03-24
 
 ### Added
@@ -62,7 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT license
 
 ---
-
-[Unreleased]: https://github.com/simoneM93/AspNetCoreCacheKit/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/simoneM93/AspNetCoreCacheKit/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/simoneM93/AspNetCoreCacheKit/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/simoneM93/AspNetCoreCacheKit/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/simoneM93/AspNetCoreCacheKit/releases/tag/v1.0.0

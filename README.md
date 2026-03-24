@@ -22,6 +22,7 @@ A lightweight caching library for ASP.NET Core featuring **group-based keys**, c
 - ✅ **Configuration validation** with DataAnnotations
 - 📐 **Nullable reference types** support
 - 🎛️ **`appsettings.json`** configuration with sensible defaults
+- 🧪 **DI-ready** — register with one line, mock `ICacheService` in tests
 
 ---
 
@@ -177,6 +178,23 @@ _cache.Delete("app:config");
 
 Setting `IsEnabled: false` is useful in development or testing environments where you want to bypass the cache without changing code.
 
+---
+
+## 🧪 Testing
+ 
+`ICacheService` is a plain interface — mock it directly in unit tests:
+ 
+```csharp
+var cacheMock = new Mock<ICacheService>();
+ 
+cacheMock
+    .Setup(c => c.GetOrCreateAsync(
+        "users", "1",
+        It.IsAny<Func<ICacheEntry, Task<User>>>(),
+        It.IsAny<CancellationToken>()))
+    .ReturnsAsync(new User { Id = 1, Name = "Simone" });
+```
+ 
 ---
 
 ## ❤️ Support

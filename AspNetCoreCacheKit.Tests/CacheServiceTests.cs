@@ -1,9 +1,7 @@
-﻿using AspNetCoreCacheKit;
-using AspNetCoreCacheKit.Models;
+﻿using AspNetCoreCacheKit.Models;
 using AspNetCoreCacheKit.Tests.Helpers;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using Xunit;
 
 namespace AspNetCoreCacheKit.Tests
 {
