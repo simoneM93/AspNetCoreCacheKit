@@ -1,7 +1,7 @@
 # AspNetCoreCacheKit
 
 [![NuGet](https://img.shields.io/nuget/v/AspNetCoreCacheKit.svg)](https://www.nuget.org/packages/AspNetCoreCacheKit)
-[![Publish to NuGet](https://github.com/simoneM93/AspNetCoreCacheKit/actions/workflows/publish.yml/badge.svg)
+[![Publish to NuGet](https://github.com/simoneM93/AspNetCoreCacheKit/actions/workflows/publish.yml/badge.svg)](https://github.com/simoneM93/AspNetCoreCacheKit/actions/workflows/publish.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=github-sponsors)](https://github.com/sponsors/simoneM93)
 [![Changelog](https://img.shields.io/badge/Changelog-view-blue)](CHANGELOG.md)
