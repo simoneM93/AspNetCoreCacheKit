@@ -1,16 +1,16 @@
 # AspNetCoreCacheKit
 
 [![NuGet](https://img.shields.io/nuget/v/AspNetCoreCacheKit.svg)](https://www.nuget.org/packages/AspNetCoreCacheKit)
-[![Publish to NuGet](https://github.com/simoneM93/AspNetCoreCacheKit/actions/workflows/publish.yml/badge.svg)](https://github.com/simoneM93/AspNetCoreCacheKit/actions/workflows/publish.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![GitHub Sponsors](https://img.shields.io/badge/Sponsor-%E2%9D%A4-ea4aaa?logo=github-sponsors)](https://github.com/sponsors/simoneM93)
 [![Changelog](https://img.shields.io/badge/Changelog-view-blue)](CHANGELOG.md)
 
-A lightweight caching library for ASP.NET Core featuring **group-based keys**, configurable expiration, and a DI-ready design that wraps `IMemoryCache` in a clean, testable abstraction.
+A lightweight caching library for ASP.NET Core featuring **group-based keys**, per-entry and per-group duration, configurable via `appsettings.json`, and a DI-ready design that wraps `IMemoryCache` in a clean, testable abstraction.
 
 > **Why AspNetCoreCacheKit?**
 > `IMemoryCache` is powerful but low-level. AspNetCoreCacheKit adds group-based key management,
-> `appsettings.json` configuration, and a consistent API that makes caching easy to use and easy to mock in tests.
+> per-group and per-entry expiration, `appsettings.json` configuration, and a consistent
+> type-safe API that makes caching easy to use and easy to mock in tests.
 
 ---
 
@@ -18,10 +18,12 @@ A lightweight caching library for ASP.NET Core featuring **group-based keys**, c
 
 - 🔑 **Group-based keys** — organise cache entries with prefixes like `"users:123"`
 - ⚡ **`GetOrCreate` and `GetOrCreateAsync`** — read-through pattern out of the box
+- ⏱️ **Per-group and per-entry duration** — fine-grained expiration control
 - 🗑️ **`Delete`** — remove a single entry by key or group + key
 - ✅ **Configuration validation** with DataAnnotations
-- 📐 **Nullable reference types** support
+- 📐 **Nullable reference types** and **generic type-safe `Set<T>`** support
 - 🎛️ **`appsettings.json`** configuration with sensible defaults
+- 🧪 **DI-ready** — register with one line, mock `ICacheService` in tests
 
 ---
 
@@ -89,12 +91,12 @@ public class UsersController : ControllerBase
     [HttpGet("{id}")]
     public async Task<IActionResult> GetUser(int id, CancellationToken ct)
     {
-        // With group key — full key will be "users:42"
+        // Uses GroupDurations["users"] = 30 min from appsettings
         var user = await _cache.GetOrCreateAsync(
             "users",
             id.ToString(),
             _ => GetUserFromDb(id),
-            ct);
+            ct: ct);
 
         return user is null ? NotFound() : Ok(user);
     }
@@ -147,15 +149,15 @@ var config = await _cache.GetOrCreateAsync("app:config", _ => LoadConfigAsync(),
 // Uses GroupDurations["countries"] = 1440 min from appsettings
 var countries = _cache.GetOrCreate("countries", () => LoadCountries());
 
-// Explicit override — ignores group and global config
+// Explicit override
 var result = _cache.GetOrCreate("countries", "IT", () => LoadItaly(), TimeSpan.FromHours(2));
 ```
 
 ### `Set` — explicit write
 
 ```csharp
-_cache.Set("users", "42", user);                                  // group duration or global
-_cache.Set("users", "42", user, TimeSpan.FromMinutes(10));        // explicit override
+_cache.Set("users", "42", user);                                   // group duration or global
+_cache.Set("users", "42", user, TimeSpan.FromMinutes(10));         // explicit override
 ```
 
 ### `Delete` — remove an entry
@@ -172,10 +174,28 @@ _cache.Delete("app:config");
 | Option | Type | Default | Description |
 |---|---|---|---|
 | `IsEnabled` | `bool` | `true` | Enables or disables caching entirely. When `false`, factories are always invoked. |
-| `DurationMinutes` | `int` | `60` | Global default cache duration in **minutes**. Used when no per-entry or per-group duration is set. |
+| `DurationMinutes` | `int` | `60` | Global default cache duration in **minutes**. |
 | `GroupDurations` | `Dictionary<string, int>` | `{}` | Per-group durations in **minutes**. Key = group name, Value = duration in minutes. |
 
 Setting `IsEnabled: false` is useful in development or testing environments where you want to bypass the cache without changing code.
+
+---
+
+## 🧪 Testing
+
+`ICacheService` is a plain interface — mock it directly in unit tests:
+
+```csharp
+var cacheMock = new Mock<ICacheService>();
+
+cacheMock
+    .Setup(c => c.GetOrCreateAsync(
+        "users", "1",
+        It.IsAny<Func<ICacheEntry, Task<User>>>(),
+        It.IsAny<TimeSpan?>(),
+        It.IsAny<CancellationToken>()))
+    .ReturnsAsync(new User { Id = 1, Name = "Simone" });
+```
 
 ---
 

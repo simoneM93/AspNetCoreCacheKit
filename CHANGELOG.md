@@ -11,6 +11,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [3.0.0] - 2026-03-XX
+ 
+### Added
+- Unit test suite (`AspNetCoreCacheKit.Tests`) using xUnit 2.x and real `IMemoryCache`
+- Repository restructured to support multiple projects: main project moved to `AspNetCoreCacheKit/` subfolder, tests in `AspNetCoreCacheKit.Tests/`
+ 
+### Changed
+- `ICacheService.Set` is now generic: `void Set<T>(string groupKey, string key, T value, TimeSpan? duration = null)` — **breaking change**
+- `ICacheService.Set` overload without group is now generic: `void Set<T>(string key, T value, TimeSpan? duration = null)` — **breaking change**
+ 
+### Fixed
+- `Set` followed by `GetOrCreate<T>` / `GetOrCreateAsync<T>` now works correctly — previously `Set(object)` was type-incompatible with generic read methods causing cache misses
+ 
+### Breaking changes
+- `Set(string groupKey, string key, object value)` → `Set<T>(string groupKey, string key, T value)`: update all call sites to use the generic overload
+  ```csharp
+  // before
+  _cache.Set("users", "1", user);
+ 
+  // after — type is usually inferred automatically
+  _cache.Set("users", "1", user);
+  ```
+ 
+---
+
 ## [2.0.0] - 2026-03-24
 
 ### Added
@@ -62,7 +87,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT license
 
 ---
-
-[Unreleased]: https://github.com/simoneM93/AspNetCoreCacheKit/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/simoneM93/AspNetCoreCacheKit/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/simoneM93/AspNetCoreCacheKit/compare/v2.0.0...v3.0.0
 [2.0.0]: https://github.com/simoneM93/AspNetCoreCacheKit/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/simoneM93/AspNetCoreCacheKit/releases/tag/v1.0.0
