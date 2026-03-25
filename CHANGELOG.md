@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [3.0.0] - 2026-03-XX
+## [3.0.0] - 2026-03-25
  
 ### Added
 - Unit test suite (`AspNetCoreCacheKit.Tests`) using xUnit 2.x and real `IMemoryCache`
