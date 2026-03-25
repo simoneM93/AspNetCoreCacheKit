@@ -7,7 +7,7 @@
 
 		<IsPackable>true</IsPackable>
 		<PackageId>AspNetCoreCacheKit</PackageId>
-		<Version>2.1.0</Version>
+		<Version>3.0.0</Version>
 		<Authors>Simone Marano</Authors>
 		<Description>Lightweight caching toolkit for ASP.NET Core with group-based keys, per-entry and per-group duration, configurable via appsettings.json and DI-ready design.</Description>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
