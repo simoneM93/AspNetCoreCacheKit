@@ -361,6 +361,20 @@ namespace AspNetCoreCacheKit.Tests
             var order = sut.GetOrCreate<string>("orders", "1", () => "x");
             Assert.Equal("order-value", order);
         }
+
+        [Fact]
+        public void GroupAndKey_DoNotCollideWithBareKeyContainingColon()
+        {
+            var sut = CacheServiceFactory.Create();
+            sut.Set("app", "config", "grouped-value");
+            sut.Set("app:config", "bare-value");
+
+            var grouped = sut.GetOrCreate<string>("app", "config", () => "x");
+            var bare = sut.GetOrCreate<string>("app:config", () => "x");
+
+            Assert.Equal("grouped-value", grouped);
+            Assert.Equal("bare-value", bare);
+        }
     }
 
     public class CacheService_MultipleCallsSameInstance

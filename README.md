@@ -19,6 +19,7 @@ A lightweight caching library for ASP.NET Core featuring **group-based keys**, p
 
 - 🔑 **Group-based keys** — organise cache entries with prefixes like `"users:123"`
 - ⚡ **`GetOrCreate` and `GetOrCreateAsync`** — read-through pattern out of the box
+- 🛡️ **Stampede-safe** — concurrent misses on the same key are serialized, so the factory runs once instead of once per caller
 - ⏱️ **Per-group and per-entry duration** — fine-grained expiration control
 - 🗑️ **`Delete`** — remove a single entry by key or group + key
 - ✅ **Configuration validation** with DataAnnotations
@@ -32,8 +33,8 @@ A lightweight caching library for ASP.NET Core featuring **group-based keys**, p
 
 | Requirement | Minimum version |
 |---|---|
-| .NET | 9.0+ |
-| ASP.NET Core | 9.0+ |
+| .NET | 10.0+ |
+| ASP.NET Core | 10.0+ |
 
 ---
 
@@ -72,6 +73,13 @@ dotnet add package AspNetCoreCacheKit
 // With appsettings.json
 builder.Services.AddAspNetCoreCacheKit(builder.Configuration);
 
+// Programmatically, no appsettings.json needed
+builder.Services.AddAspNetCoreCacheKit(options =>
+{
+    options.DurationMinutes = 30;
+    options.GroupDurations["users"] = 10;
+});
+
 // Without appsettings (uses defaults)
 builder.Services.AddAspNetCoreCacheKit();
 ```
@@ -97,7 +105,7 @@ public class UsersController : ControllerBase
             "users",
             id.ToString(),
             _ => GetUserFromDb(id),
-            ct: ct);
+            cancellationToken: ct);
 
         return user is null ? NotFound() : Ok(user);
     }
@@ -107,6 +115,9 @@ public class UsersController : ControllerBase
 ---
 
 ## 📚 API Reference
+
+> **Note:** `key` must not be null or empty on any method — `ArgumentException` is thrown otherwise.
+> `groupKey` may be omitted or empty (falls back to the global duration).
 
 ### Duration priority
 
@@ -131,7 +142,7 @@ await _cache.GetOrCreateAsync("misc", "key", _ => LoadSomethingAsync());
 
 ```csharp
 // With group — uses GroupDurations["users"] or global fallback
-var user = await _cache.GetOrCreateAsync("users", "42", _ => GetUserFromDb(42), ct: ct);
+var user = await _cache.GetOrCreateAsync("users", "42", _ => GetUserFromDb(42), cancellationToken: ct);
 
 // With group + explicit duration override
 var token = await _cache.GetOrCreateAsync(
@@ -141,7 +152,7 @@ var token = await _cache.GetOrCreateAsync(
     ct);
 
 // Without group key
-var config = await _cache.GetOrCreateAsync("app:config", _ => LoadConfigAsync(), ct: ct);
+var config = await _cache.GetOrCreateAsync("app:config", _ => LoadConfigAsync(), cancellationToken: ct);
 ```
 
 ### `GetOrCreate` — sync read-through
@@ -179,6 +190,10 @@ _cache.Delete("app:config");
 | `GroupDurations` | `Dictionary<string, int>` | `{}` | Per-group durations in **minutes**. Key = group name, Value = duration in minutes. |
 
 Setting `IsEnabled: false` is useful in development or testing environments where you want to bypass the cache without changing code.
+
+> **Note:** `CacheOptions` is bound once at startup (`IOptions<CacheOptions>`) and captured by the
+> singleton `ICacheService`. Changes to `appsettings.json` at runtime require an application restart
+> to take effect.
 
 ---
 

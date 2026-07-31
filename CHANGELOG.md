@@ -11,6 +11,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [4.0.0] - 2026-07-31
+
+### Fixed
+- Cache stampede: `GetOrCreateAsync` and `GetOrCreate` now serialize concurrent misses on the same key via a per-key lock, so the factory runs once instead of once per concurrent caller
+- Internal cache key collision: a bare key containing `:` (e.g. `"app:config"`) could collide with an unrelated group + key pair that concatenated to the same string
+- `Set`/`GetOrCreate`/`GetOrCreateAsync`/`Delete` now throw `ArgumentException` on a null or empty `key` instead of failing inside `IMemoryCache` with an unclear error
+- README example for `GetOrCreateAsync` used an invalid named argument (`ct:` instead of `cancellationToken:`)
+
+### Added
+- `AddAspNetCoreCacheKit(Action<CacheOptions>)` overload — configure options programmatically, no `IConfiguration`/`appsettings.json` required
+- XML doc comments on all public API members (`ICacheService`, `CacheOptions`, `CacheServiceExtensions`); package now ships an XML doc file
+- Test coverage for `AddAspNetCoreCacheKit` (DI registration, config binding, `ValidateOnStart` failures)
+
+### Changed
+- **Breaking:** target framework is now `net10.0` only — `net8.0` and `net9.0` are no longer supported
+
+### Breaking changes
+- Target framework `net8.0;net9.0;net10.0` → `net10.0`: projects on .NET 8 or 9 must upgrade to .NET 10, or stay on `AspNetCoreCacheKit` 3.x
+
+---
+
 ## [3.0.0] - 2026-03-25
  
 ### Added
@@ -48,7 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - `CacheOptions.Duration` renamed to `CacheOptions.DurationMinutes` for clarity — **breaking change**
-- `GetOrCreateAsync` now uses `IMemoryCache.GetOrCreateAsync` natively instead of wrapping the synchronous `GetOrCreate` — fixes potential cache stampede under concurrent requests
+- `GetOrCreateAsync` now uses `IMemoryCache.GetOrCreateAsync` natively instead of wrapping the synchronous `GetOrCreate`
 - `ICacheService` registration changed from `Scoped` to `Singleton` in `AddAspNetCoreCacheKit` — aligns with `IOptions<T>` which is Singleton
 - Return types of `GetOrCreate<T>` and `GetOrCreateAsync<T>` corrected from `T` to `T?` — reflects the nullable contract of `IMemoryCache`
 - `GetFullKey` now returns the bare key when `groupKey` is empty, avoiding keys like `:mykey`
@@ -87,7 +108,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - MIT license
 
 ---
-[Unreleased]: https://github.com/simoneM93/AspNetCoreCacheKit/compare/v3.0.0...HEAD
+[Unreleased]: https://github.com/simoneM93/AspNetCoreCacheKit/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/simoneM93/AspNetCoreCacheKit/compare/v3.0.0...v4.0.0
 [3.0.0]: https://github.com/simoneM93/AspNetCoreCacheKit/compare/v2.0.0...v3.0.0
 [2.0.0]: https://github.com/simoneM93/AspNetCoreCacheKit/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/simoneM93/AspNetCoreCacheKit/releases/tag/v1.0.0
